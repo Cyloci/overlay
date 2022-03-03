@@ -1,4 +1,6 @@
 const canvas = document.getElementById("tv-screen");
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
 const ctx = canvas.getContext("2d");
 
 const drawText = (text, x, y, scale) => {
@@ -14,43 +16,42 @@ const randomNumber = (min, max) => {
   return Math.random() * (max - min) + min;
 };
 
-const createImage = (src, text) => {
+const createImage = async (src, text) => {
+  const htmlImage = new Image();
+  htmlImage.src = src;
+  const scale = randomNumber(0.5, 2);
   const image = {
-    x: randomNumber(200, 2000),
-    y: randomNumber(200, 1000),
-    dx: randomNumber(-2, 2),
-    dy: randomNumber(-2, 2),
-    scale: randomNumber(2, 4),
+    x: randomNumber(0, canvas.width - htmlImage.width * scale),
+    y: randomNumber(0, canvas.height - htmlImage.height * scale),
+    dx: randomNumber(-1, 1) / scale,
+    dy: randomNumber(-1, 1) / scale,
+    scale,
     text,
+    image: htmlImage,
+    width: htmlImage.width,
+    height: htmlImage.height,
   };
-  image.image = new Image();
-  image.image.src = src;
-  return image;
+
+  return new Promise((resolve) => {
+    htmlImage.onload = () => {
+      resolve(image);
+    };
+  });
 };
 
-const images = [
-  createImage("psiloc2L.png", ""),
-  createImage("psiloc2L.png", ""),
-  createImage("psiloc2L.png", ""),
-  createImage("psiloc2L.png", ""),
-  createImage("psiloc2L.png", ""),
-];
+const images = [];
 
-const addImage = (src, text) => {
-  images.push(createImage(src, text));
+const addImage = async (src, text) => {
+  const image = await createImage(src, text);
+  images.push(image);
+  images.sort((a, b) => b.scale - a.scale);
 };
 
 const checkHitBox = (image, canvas) => {
-  if (
-    image.x + image.image.width * image.scale >= canvas.width ||
-    image.x <= 0
-  ) {
+  if (image.x + image.width * image.scale >= canvas.width || image.x <= 0) {
     image.dx *= -1;
   }
-  if (
-    image.y + image.image.height * image.scale >= canvas.height ||
-    image.y <= 0
-  ) {
+  if (image.y + image.height * image.scale >= canvas.height || image.y <= 0) {
     image.dy *= -1;
   }
 };
@@ -64,8 +65,8 @@ const animate = () => {
       image.image,
       image.x,
       image.y,
-      image.image.width * image.scale,
-      image.image.height * image.scale
+      image.width * image.scale,
+      image.height * image.scale
     );
     image.x += image.dx;
     image.y += image.dy;
@@ -74,6 +75,15 @@ const animate = () => {
   requestAnimationFrame(animate);
 };
 
-canvas.width = window.innerWidth;
-canvas.height = window.innerHeight;
+await Promise.all([
+  addImage("cylociL.png", ""),
+  addImage("cylociL.png", ""),
+  addImage("cylociL.png", ""),
+  addImage("cylociL.png", ""),
+  addImage("cylociL.png", ""),
+  addImage("cylociL.png", ""),
+  addImage("cylociL.png", ""),
+  addImage("cylociL.png", ""),
+]);
+
 animate();

@@ -74,15 +74,17 @@ const animate = () => {
   requestAnimationFrame(animate);
 };
 
-await Promise.all([
-  addImage("cylociL.png", ""),
-  addImage("cylociL.png", ""),
-  addImage("cylociL.png", ""),
-  addImage("cylociL.png", ""),
-  addImage("cylociL.png", ""),
-  addImage("cylociL.png", ""),
-  addImage("cylociL.png", ""),
-  addImage("cylociL.png", ""),
-]);
+(async () => {
+  await Promise.all([
+    addImage("cylociL.png", ""),
+    addImage("cylociL.png", ""),
+    addImage("cylociL.png", ""),
+    addImage("cylociL.png", ""),
+    addImage("cylociL.png", ""),
+    addImage("cylociL.png", ""),
+    addImage("cylociL.png", ""),
+    addImage("cylociL.png", ""),
+  ]);
 
-animate();
+  animate();
+})();

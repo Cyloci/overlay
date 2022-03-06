@@ -19,21 +19,20 @@ const randomNumber = (min, max) => {
 const createImage = async (src, text) => {
   const htmlImage = new Image();
   htmlImage.src = src;
-  const scale = randomNumber(0.5, 2);
-  const image = {
-    x: randomNumber(0, canvas.width - htmlImage.width * scale),
-    y: randomNumber(0, canvas.height - htmlImage.height * scale),
-    dx: randomNumber(-1, 1) / scale,
-    dy: randomNumber(-1, 1) / scale,
-    scale,
-    text,
-    image: htmlImage,
-    width: htmlImage.width,
-    height: htmlImage.height,
-  };
-
   return new Promise((resolve) => {
     htmlImage.onload = () => {
+      const scale = randomNumber(0.5, 2);
+      const image = {
+        x: randomNumber(0, canvas.width - htmlImage.width * scale),
+        y: randomNumber(0, canvas.height - htmlImage.height * scale),
+        dx: randomNumber(-1, 1) / scale,
+        dy: randomNumber(-1, 1) / scale,
+        scale,
+        text,
+        image: htmlImage,
+        width: htmlImage.width,
+        height: htmlImage.height,
+      };
       resolve(image);
     };
   });
